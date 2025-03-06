@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.nav.jagrata.app-mergeDebugResources-37:/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "com.nav.jagrata.app-mergeDebugResources-38:/values-en-rXC/values-en-rXC.xml",
             "map": [
                 {
                     "source": "/Users/navaneeth/.gradle/caches/transforms-3/9b1ceec358df9fff4d21c0e63bdc187e/transformed/core-1.13.1/res/values-en-rXC/values-en-rXC.xml",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/345b2fd54c40dfa569c92b3a4889f839/transformed/browser-1.4.0/res/values-en-rXC/values-en-rXC.xml",
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/a11a58f94c444fae6a5423a129c0bb98/transformed/browser-1.8.0/res/values-en-rXC/values-en-rXC.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",

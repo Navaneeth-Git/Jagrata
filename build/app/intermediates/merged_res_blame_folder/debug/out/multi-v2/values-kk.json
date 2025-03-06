@@ -1,25 +1,8 @@
 {
     "logs": [
         {
-            "outputFile": "com.nav.jagrata.app-mergeDebugResources-37:/values-kk/values-kk.xml",
+            "outputFile": "com.nav.jagrata.app-mergeDebugResources-38:/values-kk/values-kk.xml",
             "map": [
-                {
-                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/345b2fd54c40dfa569c92b3a4889f839/transformed/browser-1.4.0/res/values-kk/values-kk.xml",
-                    "from": {
-                        "startLines": "2,3,4,5",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,155,259,367",
-                        "endColumns": "99,103,107,104",
-                        "endOffsets": "150,254,362,467"
-                    },
-                    "to": {
-                        "startLines": "29,30,31,32",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "3216,3316,3420,3528",
-                        "endColumns": "99,103,107,104",
-                        "endOffsets": "3311,3415,3523,3628"
-                    }
-                },
                 {
                     "source": "/Users/navaneeth/.gradle/caches/transforms-3/9b1ceec358df9fff4d21c0e63bdc187e/transformed/core-1.13.1/res/values-kk/values-kk.xml",
                     "from": {
@@ -30,11 +13,11 @@
                         "endOffsets": "145,247,349,452,556,653,764,865"
                     },
                     "to": {
-                        "startLines": "4,5,6,7,8,9,10,33",
+                        "startLines": "4,5,6,7,8,9,10,42",
                         "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "285,380,482,584,687,791,888,3633",
+                        "startOffsets": "285,380,482,584,687,791,888,4337",
                         "endColumns": "94,101,101,102,103,96,110,100",
-                        "endOffsets": "375,477,579,682,786,883,994,3729"
+                        "endOffsets": "375,477,579,682,786,883,994,4433"
                     }
                 },
                 {
@@ -55,6 +38,23 @@
                     }
                 },
                 {
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/f6f013d49a3f2ddf6d1447d3a00664fa/transformed/jetified-media3-exoplayer-1.4.1/res/values-kk/values-kk.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,120,184,252,316,401,488,585,681",
+                        "endColumns": "64,63,67,63,84,86,96,95,77",
+                        "endOffsets": "115,179,247,311,396,483,580,676,754"
+                    },
+                    "to": {
+                        "startLines": "30,31,32,33,34,35,36,37,38",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "3316,3381,3445,3513,3577,3662,3749,3846,3942",
+                        "endColumns": "64,63,67,63,84,86,96,95,77",
+                        "endOffsets": "3376,3440,3508,3572,3657,3744,3841,3937,4015"
+                    }
+                },
+                {
                     "source": "/Users/navaneeth/.gradle/caches/transforms-3/0cf15f55a70cf6e45a832e4924147650/transformed/jetified-play-services-base-18.5.0/res/values-kk/values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
@@ -69,6 +69,23 @@
                         "startOffsets": "999,1102,1255,1381,1487,1627,1753,1876,2149,2314,2420,2577,2706,2859,3016,3079,3138",
                         "endColumns": "102,152,125,105,139,125,122,108,164,105,156,128,152,156,62,58,77",
                         "endOffsets": "1097,1250,1376,1482,1622,1748,1871,1980,2309,2415,2572,2701,2854,3011,3074,3133,3211"
+                    }
+                },
+                {
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/a11a58f94c444fae6a5423a129c0bb98/transformed/browser-1.8.0/res/values-kk/values-kk.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,155,259,367",
+                        "endColumns": "99,103,107,104",
+                        "endOffsets": "150,254,362,467"
+                    },
+                    "to": {
+                        "startLines": "29,39,40,41",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "3216,4020,4124,4232",
+                        "endColumns": "99,103,107,104",
+                        "endOffsets": "3311,4119,4227,4332"
                     }
                 },
                 {

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.nav.jagrata.app-mergeDebugResources-37:/values-bn/values-bn.xml",
+            "outputFile": "com.nav.jagrata.app-mergeDebugResources-38:/values-bn/values-bn.xml",
             "map": [
                 {
                     "source": "/Users/navaneeth/.gradle/caches/transforms-3/c4afbb4459b09452e6ee81286e8aa171/transformed/jetified-play-services-basement-18.5.0/res/values-bn/values.xml",
@@ -40,15 +40,15 @@
                         "endOffsets": "149,251,353,456,557,659,779,880"
                     },
                     "to": {
-                        "startLines": "4,5,6,7,8,9,10,33",
+                        "startLines": "4,5,6,7,8,9,10,42",
                         "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "281,380,482,584,687,788,890,3600",
+                        "startOffsets": "281,380,482,584,687,788,890,4359",
                         "endColumns": "98,101,101,102,100,101,119,100",
-                        "endOffsets": "375,477,579,682,783,885,1005,3696"
+                        "endOffsets": "375,477,579,682,783,885,1005,4455"
                     }
                 },
                 {
-                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/345b2fd54c40dfa569c92b3a4889f839/transformed/browser-1.4.0/res/values-bn/values-bn.xml",
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/a11a58f94c444fae6a5423a129c0bb98/transformed/browser-1.8.0/res/values-bn/values-bn.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
@@ -57,11 +57,11 @@
                         "endOffsets": "156,258,367,473"
                     },
                     "to": {
-                        "startLines": "29,30,31,32",
+                        "startLines": "29,39,40,41",
                         "startColumns": "4,4,4,4",
-                        "startOffsets": "3177,3283,3385,3494",
+                        "startOffsets": "3177,4042,4144,4253",
                         "endColumns": "105,101,108,105",
-                        "endOffsets": "3278,3380,3489,3595"
+                        "endOffsets": "3278,4139,4248,4354"
                     }
                 },
                 {
@@ -79,6 +79,23 @@
                         "startOffsets": "1010,1119,1278,1406,1517,1653,1775,1887,2143,2286,2395,2551,2679,2812,2960,3020,3087",
                         "endColumns": "108,158,127,110,135,121,111,103,142,108,155,127,132,147,59,66,89",
                         "endOffsets": "1114,1273,1401,1512,1648,1770,1882,1986,2281,2390,2546,2674,2807,2955,3015,3082,3172"
+                    }
+                },
+                {
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/f6f013d49a3f2ddf6d1447d3a00664fa/transformed/jetified-media3-exoplayer-1.4.1/res/values-bn/values-bn.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,123,189,256,322,397,464,596,725",
+                        "endColumns": "67,65,66,65,74,66,131,128,88",
+                        "endOffsets": "118,184,251,317,392,459,591,720,809"
+                    },
+                    "to": {
+                        "startLines": "30,31,32,33,34,35,36,37,38",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "3283,3351,3417,3484,3550,3625,3692,3824,3953",
+                        "endColumns": "67,65,66,65,74,66,131,128,88",
+                        "endOffsets": "3346,3412,3479,3545,3620,3687,3819,3948,4037"
                     }
                 }
             ]

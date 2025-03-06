@@ -45,5 +45,15 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to location when open to record incident locations.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs access to location when in the background to record incident locations.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to capture photos for incident reports.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs photos access to attach images to incident reports.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs microphone access to record video for incident reports.</string>
 </dict>
 </plist>

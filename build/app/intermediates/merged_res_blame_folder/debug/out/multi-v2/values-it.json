@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.nav.jagrata.app-mergeDebugResources-37:/values-it/values-it.xml",
+            "outputFile": "com.nav.jagrata.app-mergeDebugResources-38:/values-it/values-it.xml",
             "map": [
                 {
                     "source": "/Users/navaneeth/.gradle/caches/transforms-3/9b1ceec358df9fff4d21c0e63bdc187e/transformed/core-1.13.1/res/values-it/values-it.xml",
@@ -13,11 +13,11 @@
                         "endOffsets": "148,250,349,451,560,667,797,898"
                     },
                     "to": {
-                        "startLines": "4,5,6,7,8,9,10,33",
+                        "startLines": "4,5,6,7,8,9,10,42",
                         "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "281,379,481,580,682,791,898,3661",
+                        "startOffsets": "281,379,481,580,682,791,898,4323",
                         "endColumns": "97,101,98,101,108,106,129,100",
-                        "endOffsets": "374,476,575,677,786,893,1023,3757"
+                        "endOffsets": "374,476,575,677,786,893,1023,4419"
                     }
                 },
                 {
@@ -38,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/345b2fd54c40dfa569c92b3a4889f839/transformed/browser-1.4.0/res/values-it/values-it.xml",
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/a11a58f94c444fae6a5423a129c0bb98/transformed/browser-1.8.0/res/values-it/values-it.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
@@ -47,11 +47,11 @@
                         "endOffsets": "150,248,358,461"
                     },
                     "to": {
-                        "startLines": "29,30,31,32",
+                        "startLines": "29,39,40,41",
                         "startColumns": "4,4,4,4",
-                        "startOffsets": "3250,3350,3448,3558",
+                        "startOffsets": "3250,4012,4110,4220",
                         "endColumns": "99,97,109,102",
-                        "endOffsets": "3345,3443,3553,3656"
+                        "endOffsets": "3345,4105,4215,4318"
                     }
                 },
                 {
@@ -62,6 +62,23 @@
                         "startOffsets": "55,167",
                         "endColumns": "111,113",
                         "endOffsets": "162,276"
+                    }
+                },
+                {
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/f6f013d49a3f2ddf6d1447d3a00664fa/transformed/jetified-media3-exoplayer-1.4.1/res/values-it/values-it.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,126,187,259,329,405,471,558,643",
+                        "endColumns": "70,60,71,69,75,65,86,84,73",
+                        "endOffsets": "121,182,254,324,400,466,553,638,712"
+                    },
+                    "to": {
+                        "startLines": "30,31,32,33,34,35,36,37,38",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "3350,3421,3482,3554,3624,3700,3766,3853,3938",
+                        "endColumns": "70,60,71,69,75,65,86,84,73",
+                        "endOffsets": "3416,3477,3549,3619,3695,3761,3848,3933,4007"
                     }
                 },
                 {

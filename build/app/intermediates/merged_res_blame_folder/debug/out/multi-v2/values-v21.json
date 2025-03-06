@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.nav.jagrata.app-mergeDebugResources-37:/values-v21/values-v21.xml",
+            "outputFile": "com.nav.jagrata.app-mergeDebugResources-38:/values-v21/values-v21.xml",
             "map": [
                 {
                     "source": "/Users/navaneeth/.gradle/caches/transforms-3/3aac24cabc440e240c1f0d3d506b68d1/transformed/jetified-credentials-play-services-auth-1.2.0-rc01/res/values-v21/values-v21.xml",

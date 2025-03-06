@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.nav.jagrata.app-mergeDebugResources-37:/values-sk/values-sk.xml",
+            "outputFile": "com.nav.jagrata.app-mergeDebugResources-38:/values-sk/values-sk.xml",
             "map": [
                 {
                     "source": "/Users/navaneeth/.gradle/caches/transforms-3/9b1ceec358df9fff4d21c0e63bdc187e/transformed/core-1.13.1/res/values-sk/values-sk.xml",
@@ -13,11 +13,11 @@
                         "endOffsets": "146,248,349,447,557,665,787,888"
                     },
                     "to": {
-                        "startLines": "4,5,6,7,8,9,10,33",
+                        "startLines": "4,5,6,7,8,9,10,42",
                         "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "286,382,484,585,683,793,901,3717",
+                        "startOffsets": "286,382,484,585,683,793,901,4388",
                         "endColumns": "95,101,100,97,109,107,121,100",
-                        "endOffsets": "377,479,580,678,788,896,1018,3813"
+                        "endOffsets": "377,479,580,678,788,896,1018,4484"
                     }
                 },
                 {
@@ -38,20 +38,20 @@
                     }
                 },
                 {
-                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/345b2fd54c40dfa569c92b3a4889f839/transformed/browser-1.4.0/res/values-sk/values-sk.xml",
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/f6f013d49a3f2ddf6d1447d3a00664fa/transformed/jetified-media3-exoplayer-1.4.1/res/values-sk/values-sk.xml",
                     "from": {
-                        "startLines": "2,3,4,5",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,162,265,380",
-                        "endColumns": "106,102,114,101",
-                        "endOffsets": "157,260,375,477"
+                        "startLines": "2,3,4,5,6,7,8,9,10",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,132,194,258,329,406,480,564,646",
+                        "endColumns": "76,61,63,70,76,73,83,81,79",
+                        "endOffsets": "127,189,253,324,401,475,559,641,721"
                     },
                     "to": {
-                        "startLines": "29,30,31,32",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "3290,3397,3500,3615",
-                        "endColumns": "106,102,114,101",
-                        "endOffsets": "3392,3495,3610,3712"
+                        "startLines": "30,31,32,33,34,35,36,37,38",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "3397,3474,3536,3600,3671,3748,3822,3906,3988",
+                        "endColumns": "76,61,63,70,76,73,83,81,79",
+                        "endOffsets": "3469,3531,3595,3666,3743,3817,3901,3983,4063"
                     }
                 },
                 {
@@ -69,6 +69,23 @@
                         "startOffsets": "2022",
                         "endColumns": "138",
                         "endOffsets": "2156"
+                    }
+                },
+                {
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/a11a58f94c444fae6a5423a129c0bb98/transformed/browser-1.8.0/res/values-sk/values-sk.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,162,265,380",
+                        "endColumns": "106,102,114,101",
+                        "endOffsets": "157,260,375,477"
+                    },
+                    "to": {
+                        "startLines": "29,39,40,41",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "3290,4068,4171,4286",
+                        "endColumns": "106,102,114,101",
+                        "endOffsets": "3392,4166,4281,4383"
                     }
                 },
                 {

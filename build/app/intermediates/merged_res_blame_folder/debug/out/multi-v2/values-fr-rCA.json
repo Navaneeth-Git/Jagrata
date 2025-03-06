@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.nav.jagrata.app-mergeDebugResources-37:/values-fr-rCA/values-fr-rCA.xml",
+            "outputFile": "com.nav.jagrata.app-mergeDebugResources-38:/values-fr-rCA/values-fr-rCA.xml",
             "map": [
                 {
                     "source": "/Users/navaneeth/.gradle/caches/transforms-3/9b1ceec358df9fff4d21c0e63bdc187e/transformed/core-1.13.1/res/values-fr-rCA/values-fr-rCA.xml",
@@ -13,28 +13,11 @@
                         "endOffsets": "148,250,349,451,555,659,773,874"
                     },
                     "to": {
-                        "startLines": "4,5,6,7,8,9,10,33",
+                        "startLines": "4,5,6,7,8,9,10,42",
                         "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "290,388,490,589,691,795,899,3855",
+                        "startOffsets": "290,388,490,589,691,795,899,4585",
                         "endColumns": "97,101,98,101,103,103,113,100",
-                        "endOffsets": "383,485,584,686,790,894,1008,3951"
-                    }
-                },
-                {
-                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/345b2fd54c40dfa569c92b3a4889f839/transformed/browser-1.4.0/res/values-fr-rCA/values-fr-rCA.xml",
-                    "from": {
-                        "startLines": "2,3,4,5",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,162,264,383",
-                        "endColumns": "106,101,118,104",
-                        "endOffsets": "157,259,378,483"
-                    },
-                    "to": {
-                        "startLines": "29,30,31,32",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "3422,3529,3631,3750",
-                        "endColumns": "106,101,118,104",
-                        "endOffsets": "3524,3626,3745,3850"
+                        "endOffsets": "383,485,584,686,790,894,1008,4681"
                     }
                 },
                 {
@@ -45,6 +28,23 @@
                         "startOffsets": "55,171",
                         "endColumns": "115,118",
                         "endOffsets": "166,285"
+                    }
+                },
+                {
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/a11a58f94c444fae6a5423a129c0bb98/transformed/browser-1.8.0/res/values-fr-rCA/values-fr-rCA.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,162,264,383",
+                        "endColumns": "106,101,118,104",
+                        "endOffsets": "157,259,378,483"
+                    },
+                    "to": {
+                        "startLines": "29,39,40,41",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "3422,4259,4361,4480",
+                        "endColumns": "106,101,118,104",
+                        "endOffsets": "3524,4356,4475,4580"
                     }
                 },
                 {
@@ -79,6 +79,23 @@
                         "startOffsets": "2076",
                         "endColumns": "154",
                         "endOffsets": "2226"
+                    }
+                },
+                {
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/f6f013d49a3f2ddf6d1447d3a00664fa/transformed/jetified-media3-exoplayer-1.4.1/res/values-fr-rCA/values-fr-rCA.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,129,194,272,344,427,503,600,693",
+                        "endColumns": "73,64,77,71,82,75,96,92,91",
+                        "endOffsets": "124,189,267,339,422,498,595,688,780"
+                    },
+                    "to": {
+                        "startLines": "30,31,32,33,34,35,36,37,38",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "3529,3603,3668,3746,3818,3901,3977,4074,4167",
+                        "endColumns": "73,64,77,71,82,75,96,92,91",
+                        "endOffsets": "3598,3663,3741,3813,3896,3972,4069,4162,4254"
                     }
                 }
             ]

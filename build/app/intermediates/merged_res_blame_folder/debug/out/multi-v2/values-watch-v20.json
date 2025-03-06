@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.nav.jagrata.app-mergeDebugResources-37:/values-watch-v20/values-watch-v20.xml",
+            "outputFile": "com.nav.jagrata.app-mergeDebugResources-38:/values-watch-v20/values-watch-v20.xml",
             "map": [
                 {
                     "source": "/Users/navaneeth/.gradle/caches/transforms-3/64c232131f0463dca9e6055050358d24/transformed/jetified-play-services-auth-20.7.0/res/values-watch-v20/values.xml",

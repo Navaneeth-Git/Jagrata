@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.nav.jagrata.app-mergeDebugResources-37:/values-ta/values-ta.xml",
+            "outputFile": "com.nav.jagrata.app-mergeDebugResources-38:/values-ta/values-ta.xml",
             "map": [
                 {
                     "source": "/Users/navaneeth/.gradle/caches/transforms-3/9353f3ca738d7c408eacae78bd3fe4a8/transformed/jetified-credentials-1.2.0-rc01/res/values-ta/values-ta.xml",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/345b2fd54c40dfa569c92b3a4889f839/transformed/browser-1.4.0/res/values-ta/values-ta.xml",
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/a11a58f94c444fae6a5423a129c0bb98/transformed/browser-1.8.0/res/values-ta/values-ta.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
@@ -23,11 +23,28 @@
                         "endOffsets": "167,269,376,480"
                     },
                     "to": {
-                        "startLines": "29,30,31,32",
+                        "startLines": "29,39,40,41",
                         "startColumns": "4,4,4,4",
-                        "startOffsets": "3268,3385,3487,3594",
+                        "startOffsets": "3268,4093,4195,4302",
                         "endColumns": "116,101,106,103",
-                        "endOffsets": "3380,3482,3589,3693"
+                        "endOffsets": "3380,4190,4297,4401"
+                    }
+                },
+                {
+                    "source": "/Users/navaneeth/.gradle/caches/transforms-3/f6f013d49a3f2ddf6d1447d3a00664fa/transformed/jetified-media3-exoplayer-1.4.1/res/values-ta/values-ta.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,124,197,266,336,418,499,596,681",
+                        "endColumns": "68,72,68,69,81,80,96,84,81",
+                        "endOffsets": "119,192,261,331,413,494,591,676,758"
+                    },
+                    "to": {
+                        "startLines": "30,31,32,33,34,35,36,37,38",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "3385,3454,3527,3596,3666,3748,3829,3926,4011",
+                        "endColumns": "68,72,68,69,81,80,96,84,81",
+                        "endOffsets": "3449,3522,3591,3661,3743,3824,3921,4006,4088"
                     }
                 },
                 {
@@ -74,11 +91,11 @@
                         "endOffsets": "146,249,348,446,553,668,796,897"
                     },
                     "to": {
-                        "startLines": "4,5,6,7,8,9,10,33",
+                        "startLines": "4,5,6,7,8,9,10,42",
                         "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "286,382,485,584,682,789,904,3698",
+                        "startOffsets": "286,382,485,584,682,789,904,4406",
                         "endColumns": "95,102,98,97,106,114,127,100",
-                        "endOffsets": "377,480,579,677,784,899,1027,3794"
+                        "endOffsets": "377,480,579,677,784,899,1027,4502"
                     }
                 }
             ]
