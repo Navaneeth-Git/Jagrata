@@ -74,6 +74,50 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
   // Add a new variable to store the list of departments based on severity
   List<String> _departmentsBasedOnSeverity = [];
 
+  // Add this to your state variables
+  String? _selectedDepartment = 'ULB'; // Make it nullable but keep default value
+  String? _selectedState;
+
+  // Add this list of Indian states
+  final List<String> indianStates = [
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+    'Andaman and Nicobar Islands',
+    'Chandigarh',
+    'Dadra and Nagar Haveli and Daman and Diu',
+    'Delhi',
+    'Jammu and Kashmir',
+    'Ladakh',
+    'Lakshadweep',
+    'Puducherry'
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -84,9 +128,9 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: _incidentDate ?? DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      lastDate: DateTime.now(),
     );
     if (picked != null && picked != _incidentDate) {
       setState(() {
@@ -738,14 +782,12 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
                                   iconSize: 24,
                                   elevation: 16,
                                   style: TextStyle(color: Colors.black, fontSize: 16),
-                                  items: [
-                                    ...incidentTypes.map((String type) {
-                                      return DropdownMenuItem<String>(
-                                        value: type,
-                                        child: Text(type),
-                                      );
-                                    }).toList(),
-                                  ],
+                                  items: incidentTypes.map((String type) {
+                                    return DropdownMenuItem<String>(
+                                      value: type,
+                                      child: Text(type),
+                                    );
+                                  }).toList(),
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       _selectedIncidentType = newValue;
@@ -918,7 +960,77 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
                 ),
               ),
               SizedBox(height: 16.0),
-              _buildDepartmentField(),
+              DropdownButtonFormField<String>(
+                value: _selectedDepartment,
+                decoration: InputDecoration(
+                  labelText: 'Department',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                ),
+                isExpanded: true,
+                items: [
+                  DropdownMenuItem(
+                    value: 'ULB', 
+                    child: Text(
+                      'Urban Local Bodies (ULB)',
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  ),
+                  DropdownMenuItem(
+                    value: 'Central Vigilance Commission', 
+                    child: Text(
+                      'Central Vigilance Commission',
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  ),
+                  DropdownMenuItem(
+                    value: 'State Vigilance & Anti-Corruption Bureau', 
+                    child: Text(
+                      'State Vigilance & Anti-Corruption Bureau',
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  ),
+                  DropdownMenuItem(
+                    value: 'Chief Vigilance Officers (CVO)', 
+                    child: Text(
+                      'Chief Vigilance Officers (CVO)',
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  ),
+                ],
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedDepartment = newValue;
+                    _selectedState = null;
+                  });
+                },
+              ),
+              SizedBox(height: 16),
+              if (_selectedDepartment == 'ULB' || 
+                  _selectedDepartment == 'State Vigilance & Anti-Corruption Bureau')
+                DropdownButtonFormField<String>(
+                  value: _selectedState,
+                  decoration: InputDecoration(
+                    labelText: 'State',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  ),
+                  isExpanded: true,
+                  items: indianStates.map((String state) {
+                    return DropdownMenuItem(
+                      value: state,
+                      child: Text(
+                        state,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedState = newValue;
+                    });
+                  },
+                ),
               SizedBox(height: 16.0),
               TextFormField(
                 controller: _witnessesController,
@@ -1241,70 +1353,72 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
       User? currentUser = _auth.currentUser;
       if (currentUser == null) throw Exception('No authenticated user found');
 
+      // Get all officer names from the controllers and join them
+      String officerNames = _nameControllers
+          .map((controller) => controller.text.trim())
+          .where((name) => name.isNotEmpty)
+          .join(', ');
+
       // Create incident document
       await _firestore.collection('incidents').add({
         'userId': currentUser.uid,
         'userEmail': currentUser.email,
-        'incidentType': _selectedIncidentType,
-        'otherIncidentType': _selectedIncidentType == 'Other' ? _otherIncidentTypeController.text : null,
-        'date': _incidentDate?.toIso8601String(),
-        'time': _incidentTime != null ? '${_incidentTime!.hour}:${_incidentTime!.minute}' : null,
-        'location': _locationController.text,
+        'title': _selectedIncidentType == 'Other' ? _otherIncidentTypeController.text : _selectedIncidentType,
         'description': _descriptionController.text,
         'aiSummary': _aiSummaryController.text,
         'severity': _severityController.text,
+        'department': _selectedDepartment,
+        'state': _selectedState,
+        'location': _locationController.text,
         'witnesses': _witnessesController.text,
         'attachments': fileUrls,
         'timestamp': FieldValue.serverTimestamp(),
-        'status': 'Reviewing',
-        'department': _departmentController.text,
+        'status': 'Pending',
+        'officerName': officerNames,  // Add the officer names here
       });
 
+      // Clear all form fields after successful submission
+      setState(() {
+        _selectedIncidentType = null;
+        _otherIncidentTypeController.clear();
+        _descriptionController.clear();
+        _aiSummaryController.clear();
+        _severityController.clear();
+        _selectedDepartment = 'ULB';
+        _selectedState = null;
+        _locationController.clear();
+        _witnessesController.clear();
+        _attachedFiles.clear();
+        // Clear officer name controllers
+        for (var controller in _nameControllers) {
+          controller.clear();
+        }
+      });
+
+      // Show success message
       if (mounted) {
-        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Incident reported successfully'),
-            duration: Duration(seconds: 2),
+            backgroundColor: Colors.green,
           ),
         );
 
-        // Clear the form
-        _formKey.currentState?.reset();
-        _selectedIncidentType = null;
-        _incidentDate = null;
-        _incidentTime = null;
-        _attachedFiles.clear();
-        _otherIncidentTypeController.clear();
-        _descriptionController.clear();
-        _aiSummaryController.text = '';
-        _severityController.text = '';
-        _witnessesController.clear();
-        _locationController.clear();
-        _departmentController.clear();
-
-        // Navigate to home using MainScreenState
+        // Get the MainScreen state and set index to 0 (home page)
         final mainScreenState = context.findAncestorStateOfType<MainScreenState>();
         if (mainScreenState != null) {
           mainScreenState.setIndex(0); // Switch to home page
         }
       }
     } catch (e) {
+      print('Error saving incident: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error saving incident: ${e.toString()}'),
+            content: Text('Error reporting incident: ${e.toString()}'),
             backgroundColor: Colors.red,
-            duration: Duration(seconds: 3),
           ),
         );
-      }
-      print('Error saving incident: $e');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isUploading = false;
-        });
       }
     }
   }

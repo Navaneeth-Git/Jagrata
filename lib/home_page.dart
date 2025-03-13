@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final Set<String> _expandedCards = {};
+  Set<String> _expandedCards = {};
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildIncidentCard(Map<String, dynamic> data) {
     final timestamp = (data['timestamp'] as Timestamp).toDate();
     final String cardId = data['id'] ?? timestamp.toString();
-    final bool isExpanded = _expandedCards.contains(cardId);
+    final bool isExpanded = _isCardExpanded(cardId);
     final List<String> names = List<String>.from(data['names'] ?? []);
     
     return AnimatedContainer(
@@ -186,13 +186,7 @@ class _HomePageState extends State<HomePage> {
         ),
         child: InkWell(
           onTap: () {
-            setState(() {
-              if (isExpanded) {
-                _expandedCards.remove(cardId);
-              } else {
-                _expandedCards.add(cardId);
-              }
-            });
+            _toggleCard(cardId);
           },
           borderRadius: BorderRadius.circular(12),
           child: Column(
@@ -214,49 +208,79 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildStatusBadge(data['status']),
-                        Row(
-                          children: [
-                            _buildSeverityBadge(data['severity']),
-                            SizedBox(width: 8),
-                            AnimatedRotation(
-                              turns: isExpanded ? 0.5 : 0,
-                              duration: Duration(milliseconds: 300),
-                              child: Icon(
-                                Icons.expand_more,
-                                color: Colors.grey.shade600,
-                              ),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: _getStatusColor(data['status'] ?? 'Pending').withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: _getStatusColor(data['status'] ?? 'Pending').withOpacity(0.5),
+                              width: 1,
                             ),
-                          ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _getStatusIcon(data['status'] ?? 'Pending'),
+                                size: 14,
+                                color: _getStatusColor(data['status'] ?? 'Pending'),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                data['status'] ?? 'Pending',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: _getStatusColor(data['status'] ?? 'Pending'),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                        _buildSeverityBadge(data['severity']),
                       ],
                     ),
                     SizedBox(height: 12),
                     
-                    if (names.isNotEmpty) ...[
-                      Row(
-                        children: [
-                          Icon(Icons.person, size: 18, color: Colors.grey.shade700),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              names.join(', '),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
-                                color: Colors.grey.shade800,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+                    Text(
+                      data['title'] ?? 'Untitled Incident',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    
+                    Row(
+                      children: [
+                        Icon(Icons.location_on_outlined, size: 16, color: Colors.grey[600]),
+                        SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            data['location'] ?? 'Location not specified',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
                             ),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                    ],
-                    
-                    if (!isExpanded) ...[
-                      _buildPreviewContent(data, timestamp),
-                    ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
+                        SizedBox(width: 4),
+                        Text(
+                          _formatTimestamp(data['timestamp'] as Timestamp),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -264,8 +288,8 @@ class _HomePageState extends State<HomePage> {
               AnimatedCrossFade(
                 firstChild: SizedBox(height: 0),
                 secondChild: _buildExpandedContent(data, timestamp),
-                crossFadeState: isExpanded 
-                    ? CrossFadeState.showSecond 
+                crossFadeState: _isCardExpanded(data['id'] ?? timestamp.toString())
+                    ? CrossFadeState.showSecond
                     : CrossFadeState.showFirst,
                 duration: Duration(milliseconds: 300),
                 reverseDuration: Duration(milliseconds: 200),
@@ -278,128 +302,212 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildPreviewContent(Map<String, dynamic> data, DateTime timestamp) {
+  Widget _buildExpandedContent(Map<String, dynamic> data, DateTime timestamp) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(12),
+          bottomRight: Radius.circular(12),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Divider(height: 1),
+          SizedBox(height: 16),
+          
+          // Description Section
+          _buildExpandedSection(
+            title: 'Description',
+            content: data['description'] ?? 'No description provided',
+            icon: Icons.description_outlined,
+          ),
+          SizedBox(height: 20),
+
+          // AI Analysis Section
+          if (data['aiSummary'] != null && data['aiSummary'].toString().isNotEmpty) ...[
+            _buildExpandedSection(
+              title: 'AI Analysis',
+              content: data['aiSummary'],
+              icon: Icons.psychology_outlined,
+            ),
+            SizedBox(height: 20),
+          ],
+
+          // Reporter Information
+          if (data['userEmail'] != null) ...[
+            _buildExpandedSection(
+              title: 'Reported By',
+              content: data['userEmail'],
+              icon: Icons.person_outline,
+              isSmallSection: true,
+            ),
+            SizedBox(height: 20),
+          ],
+
+          // Location Information
+          if (data['location'] != null && data['location'].toString().isNotEmpty) ...[
+            _buildExpandedSection(
+              title: 'Location',
+              content: data['location'],
+              icon: Icons.location_on_outlined,
+              isSmallSection: true,
+            ),
+            SizedBox(height: 20),
+          ],
+
+          // Department and State Section
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: _buildExpandedSection(
+                  title: 'Department',
+                  content: data['department'] ?? 'Not specified',
+                  icon: Icons.business_outlined,
+                  isSmallSection: true,
+                ),
+              ),
+              SizedBox(width: 20),
+              if (data['state'] != null)
+                Expanded(
+                  child: _buildExpandedSection(
+                    title: 'State',
+                    content: data['state'],
+                    icon: Icons.location_city_outlined,
+                    isSmallSection: true,
+                  ),
+                ),
+            ],
+          ),
+          SizedBox(height: 20),
+
+          // Witnesses Section
+          if (data['witnesses'] != null && data['witnesses'].toString().isNotEmpty) ...[
+            _buildExpandedSection(
+              title: 'Witnesses',
+              content: data['witnesses'],
+              icon: Icons.people_outline,
+            ),
+            SizedBox(height: 20),
+          ],
+
+          // Attachments Section
+          if (data['attachments'] != null && (data['attachments'] as List).isNotEmpty) ...[
+            _buildExpandedSection(
+              title: 'Attachments',
+              content: '',
+              icon: Icons.attach_file_outlined,
+              customContent: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: (data['attachments'] as List).length,
+                itemBuilder: (context, index) {
+                  final url = data['attachments'][index];
+                  final String fileExtension = url.split('.').last.toLowerCase();
+                  
+                  // Determine the icon based on file type
+                  IconData fileIcon;
+                  if (['jpg', 'jpeg', 'png', 'gif'].contains(fileExtension)) {
+                    fileIcon = Icons.image_outlined;
+                  } else if (['mp4', 'mov', 'avi'].contains(fileExtension)) {
+                    fileIcon = Icons.video_library_outlined;
+                  } else if (fileExtension == 'pdf') {
+                    fileIcon = Icons.picture_as_pdf_outlined;
+                  } else {
+                    fileIcon = Icons.insert_drive_file_outlined;
+                  }
+
+                  return Card(
+                    margin: EdgeInsets.only(top: 8),
+                    child: ListTile(
+                      leading: Icon(fileIcon, color: Colors.grey[700]),
+                      title: Text(
+                        'Attachment ${index + 1}${fileExtension.isNotEmpty ? '.$fileExtension' : ''}',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'avi'].contains(fileExtension))
+                            Icon(Icons.preview_outlined, color: Colors.blue)
+                          else
+                            Icon(Icons.download_outlined, color: Colors.blue),
+                        ],
+                      ),
+                      onTap: () => _handleAttachmentTap(url),
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 20),
+          ],
+
+          // Expand/Collapse Button
+          Center(
+            child: TextButton.icon(
+              onPressed: () => _toggleCard(data['id'] ?? timestamp.toString()),
+              icon: Icon(Icons.expand_less),
+              label: Text('Show Less'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.grey[600],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to build consistent expanded sections
+  Widget _buildExpandedSection({
+    required String title,
+    required String content,
+    required IconData icon,
+    bool isSmallSection = false,
+    Widget? customContent,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Icon(Icons.calendar_today, size: 18, color: Colors.grey.shade700),
+            Icon(icon, size: 20, color: Colors.grey[700]),
             SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                DateFormat('MMM d, yyyy • hh:mm a').format(timestamp),
-                style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
-                overflow: TextOverflow.ellipsis,
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: isSmallSection ? 14 : 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[800],
               ),
             ),
           ],
         ),
         SizedBox(height: 8),
-        Text(
-          data['aiSummary'] ?? 'No summary available',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey.shade600,
+        if (customContent != null)
+          customContent
+        else
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey[200]!),
+            ),
+            child: Text(
+              content,
+              style: TextStyle(
+                fontSize: isSmallSection ? 13 : 14,
+                height: 1.5,
+                color: Colors.grey[800],
+              ),
+            ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildExpandedContent(Map<String, dynamic> data, DateTime timestamp) {
-    return Column(
-      children: [
-        Divider(height: 1),
-        Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.calendar_today, size: 18, color: Colors.grey.shade700),
-                  SizedBox(width: 8),
-                  Text(
-                    DateFormat('MMMM d, yyyy • hh:mm a').format(timestamp),
-                    style: TextStyle(
-                      color: Colors.grey.shade700,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-
-              Text(
-                'Description',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey.shade800,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                data['description'] ?? 'No description provided',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade700,
-                  height: 1.5,
-                ),
-              ),
-              SizedBox(height: 16),
-
-              Container(
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue.shade100),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.auto_awesome, 
-                          size: 16, 
-                          color: Colors.blue.shade700
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          'AI Summary',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue.shade700,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      data['aiSummary'] ?? 'No AI summary available',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blue.shade900,
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              if (data['attachments'] != null && 
-                  (data['attachments'] as List).isNotEmpty) ...[
-                SizedBox(height: 16),
-                _buildAttachmentPreview(data['attachments'] as List<dynamic>),
-              ],
-            ],
-          ),
-        ),
       ],
     );
   }
@@ -600,7 +708,7 @@ class _HomePageState extends State<HomePage> {
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: InkWell(
-                    onTap: () => _showImagePreview(context, url),
+                    onTap: () => _showImagePreview(url),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.network(
@@ -686,11 +794,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showImagePreview(BuildContext context, String imageUrl) {
+  void _showImagePreview(String imageUrl) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => Scaffold(
+          backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Colors.black,
             leading: IconButton(
@@ -730,10 +839,12 @@ class _HomePageState extends State<HomePage> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'reviewing':
+      case 'pending':
         return Colors.orange;
-      case 'in progress':
+      case 'under investigation':
         return Colors.blue;
+      case 'in progress':
+        return Colors.amber.shade700;
       case 'resolved':
         return Colors.green;
       case 'rejected':
@@ -824,6 +935,55 @@ class _HomePageState extends State<HomePage> {
         return Icons.cancel_outlined;
       default:
         return Icons.help_outline;
+    }
+  }
+
+  String _formatTimestamp(Timestamp timestamp) {
+    final date = timestamp.toDate();
+    return DateFormat('MMM d, yyyy • hh:mm a').format(date);
+  }
+
+  bool _isCardExpanded(String cardId) {
+    return _expandedCards.contains(cardId);
+  }
+
+  void _toggleCard(String cardId) {
+    setState(() {
+      if (_expandedCards.contains(cardId)) {
+        _expandedCards.remove(cardId);
+      } else {
+        _expandedCards.add(cardId);
+      }
+    });
+  }
+
+  void _handleAttachmentTap(String url) {
+    final String fileExtension = url.split('.').last.toLowerCase();
+    
+    // Image files
+    if (['jpg', 'jpeg', 'png', 'gif'].contains(fileExtension)) {
+      _showImagePreview(url);
+    }
+    // Video files
+    else if (['mp4', 'mov', 'avi'].contains(fileExtension)) {
+      _showVideoPreview(context, url);
+    }
+    // PDF and other documents
+    else {
+      _downloadFile(url);
+    }
+  }
+
+  Future<void> _downloadFile(String url) async {
+    try {
+      await launchUrlString(url, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error opening file: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 }

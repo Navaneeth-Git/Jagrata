@@ -172,24 +172,47 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> _checkProfileCompletion() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+    if (user == null || !user.emailVerified) {
+      return; // Exit if no user or email not verified
+    }
+
+    try {
+      // First check if user is an admin
+      final adminDoc = await FirebaseFirestore.instance
+          .collection('admins')
+          .doc(user.uid)
+          .get();
       
-      if (!userDoc.exists) {
-        _redirectToProfile();
+      if (adminDoc.exists) {
+        // Skip profile completion for admins
         return;
       }
 
+      // Check user profile
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      
+      if (!userDoc.exists) {
+        return; // Don't redirect if document doesn't exist
+      }
+
       final userData = userDoc.data() as Map<String, dynamic>;
+      
+      // Check if all required fields exist and are not null
       bool isProfileComplete = userData['name'] != null && 
                              userData['phone'] != null && 
                              userData['govtId'] != null &&
                              userData['country'] != null && 
                              userData['gender'] != null;
 
+      // Only redirect to profile completion if profile is not complete
       if (!isProfileComplete) {
         _redirectToProfile();
       }
+    } catch (e) {
+      print('Error checking profile completion: $e');
     }
   }
 
@@ -207,6 +230,57 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> checkAuth() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Check if user is an admin
+      final adminDoc = await FirebaseFirestore.instance
+          .collection('admins')
+          .doc(user.uid)
+          .get();
+      
+      if (adminDoc.exists) {
+        // Skip profile completion for admins
+        return;
+      }
+
+      // Check profile completion status
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      
+      if (userDoc.exists) {
+        final userData = userDoc.data() as Map<String, dynamic>;
+        final isProfileComplete = userData['isProfileComplete'] ?? false;
+
+        if (!isProfileComplete) {
+          // Redirect to profile completion
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilePage(
+                onProfileUpdated: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainScreen()),
+                  );
+                },
+              ),
+            ),
+          );
+          return;
+        }
+      }
+
+      // If profile is complete or user is admin, proceed to main screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MainScreen()),
+      );
+    }
   }
 }
 

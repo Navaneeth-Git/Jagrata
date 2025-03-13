@@ -32,6 +32,57 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     super.dispose();
   }
 
+  Future<void> _createInitialAdminIfNeeded(String uid, String email) async {
+    try {
+      // Check if any admin exists
+      QuerySnapshot adminQuery = await FirebaseFirestore.instance
+          .collection('admins')
+          .limit(1)
+          .get();
+
+      // If no admins exist, create the first admin
+      if (adminQuery.docs.isEmpty) {
+        await FirebaseFirestore.instance
+            .collection('admins')
+            .doc(uid)
+            .set({
+              'email': email,
+              'departments': [widget.department],
+              'currentDepartment': widget.department,
+              'currentState': widget.state,
+              'createdAt': FieldValue.serverTimestamp(),
+              'isRootAdmin': true,
+              'type': 'admin',
+            });
+        return;
+      }
+
+      // If admins exist, check if this email is in allowed admins
+      QuerySnapshot adminDoc = await FirebaseFirestore.instance
+          .collection('admins')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      if (adminDoc.docs.isEmpty) {
+        // Create admin document if email exists but document doesn't
+        await FirebaseFirestore.instance
+            .collection('admins')
+            .doc(uid)
+            .set({
+              'email': email,
+              'departments': [widget.department],
+              'currentDepartment': widget.department,
+              'currentState': widget.state,
+              'createdAt': FieldValue.serverTimestamp(),
+              'type': 'admin',
+            });
+      }
+    } catch (e) {
+      print('Error creating admin: $e');
+    }
+  }
+
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -45,7 +96,13 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
           password: _passwordController.text,
         );
         
-        // Check if user exists in admins collection and has correct department access
+        // Create admin document if needed
+        await _createInitialAdminIfNeeded(
+          userCredential.user!.uid,
+          _emailController.text.trim(),
+        );
+        
+        // Check if user exists in admins collection
         DocumentSnapshot adminDoc = await FirebaseFirestore.instance
             .collection('admins')
             .doc(userCredential.user!.uid)
@@ -54,9 +111,29 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
         if (adminDoc.exists) {
           Map<String, dynamic> adminData = adminDoc.data() as Map<String, dynamic>;
           List<String> allowedDepartments = List<String>.from(adminData['departments'] ?? []);
+          String? assignedState = adminData['currentState'];
           
           // Check if admin has access to the selected department
           if (allowedDepartments.contains(widget.department)) {
+            // Check if state matches for state-specific departments
+            bool isStateSpecificDepartment = widget.department == 'State Vigilance & Anti-Corruption Bureau' || 
+                                           widget.department == 'Urban Local Bodies (ULB) / Municipal Corporations';
+            
+            if (isStateSpecificDepartment) {
+              // Verify state matches
+              if (assignedState != widget.state) {
+                await FirebaseAuth.instance.signOut();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('You do not have access to this state. Please select your assigned state.'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                setState(() => _isLoading = false);
+                return;
+              }
+            }
+
             // Update admin's current department and state
             await FirebaseFirestore.instance
                 .collection('admins')
@@ -157,127 +234,183 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
           child: Container(
             width: contentWidth,
             padding: EdgeInsets.all(24.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Department display
-                  Text(
-                    'Department: ${widget.department}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Department and State Info Card
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(bottom: 24),
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade200),
                   ),
-                  if (widget.state != null) ...[
-                    SizedBox(height: 8),
-                    Text(
-                      'State: ${widget.state}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.business, color: darkGreenColor, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            'Department',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                  SizedBox(height: 32),
-
-                  // Email field
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.email, color: darkGreenColor),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: darkGreenColor, width: 2),
-                      ),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!value.contains('@') || !value.contains('.')) {
-                        return 'Please enter a valid email address';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 16),
-
-                  // Password field
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: Icon(Icons.lock, color: darkGreenColor),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                          color: darkGreenColor,
+                      Padding(
+                        padding: EdgeInsets.only(left: 28, top: 4),
+                        child: Text(
+                          widget.department,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: darkGreenColor, width: 2),
-                      ),
-                    ),
-                    obscureText: _obscurePassword,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 24),
-
-                  // Login button
-                  SizedBox(
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _login,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: darkGreenColor,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        elevation: 2,
-                      ),
-                      child: _isLoading
-                          ? SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : Text(
-                              'Login',
+                      if (widget.state != null) ...[
+                        SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Icon(Icons.location_on, color: darkGreenColor, size: 20),
+                            SizedBox(width: 8),
+                            Text(
+                              'State',
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade600,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                    ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 28, top: 4),
+                          child: Text(
+                            widget.state!,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
-                ],
-              ),
+                ),
+
+                // Login Form
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Email field
+                      TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: Icon(Icons.email, color: darkGreenColor),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: darkGreenColor, width: 2),
+                          ),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          if (!value.contains('@') || !value.contains('.')) {
+                            return 'Please enter a valid email address';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 16),
+
+                      // Password field
+                      TextFormField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          prefixIcon: Icon(Icons.lock, color: darkGreenColor),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                              color: darkGreenColor,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: darkGreenColor, width: 2),
+                          ),
+                        ),
+                        obscureText: _obscurePassword,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 24),
+
+                      // Login button
+                      SizedBox(
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: _isLoading ? null : _login,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: darkGreenColor,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            elevation: 2,
+                          ),
+                          child: _isLoading
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
