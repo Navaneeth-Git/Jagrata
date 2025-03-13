@@ -14,37 +14,54 @@ import 'dart:io' show Platform;
 import 'admin_login_page.dart';
 import 'admin_department_selection_page.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Enable high refresh rate
-  if (Platform.isAndroid) {
+  // Enable high refresh rate for Android
+  if (!kIsWeb && Platform.isAndroid) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
       await SystemChannels.platform.invokeMethod('HapticFeedback.vibrate');
     });
   }
   
+  initializeApp();
+}
+
+Future<void> initializeApp() async {
   try {
     if (Firebase.apps.isEmpty) {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
       
-      // Enable Firestore persistence
-      FirebaseFirestore.instance.settings = const Settings(
-        persistenceEnabled: true,
-        cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-      );
+      // Enable Firestore persistence for non-web platforms
+      if (!kIsWeb) {
+        FirebaseFirestore.instance.settings = const Settings(
+          persistenceEnabled: true,
+          cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+        );
+      } else {
+        // Web-specific Firestore settings
+        FirebaseFirestore.instance.settings = const Settings(
+          persistenceEnabled: true,
+          cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+        );
+      }
 
-      // Enable Auth persistence - this is the key change
-      await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+      // Enable Auth persistence
+      if (!kIsWeb) {
+        await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+      } else {
+        // Web-specific Auth persistence
+        await FirebaseAuth.instance.setPersistence(Persistence.INDEXED_DB);
+      }
     }
+    
+    runApp(MyApp());
   } catch (e) {
     print('Firebase initialization error: $e');
   }
-
-  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

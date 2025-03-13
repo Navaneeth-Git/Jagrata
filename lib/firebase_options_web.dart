@@ -2,11 +2,12 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 
 class DefaultFirebaseOptionsWeb {
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'YOUR-ACTUAL-API-KEY',
-    appId: 'YOUR-ACTUAL-APP-ID',
-    messagingSenderId: 'YOUR-ACTUAL-SENDER-ID',
-    projectId: 'YOUR-ACTUAL-PROJECT-ID',
-    authDomain: 'YOUR-ACTUAL-AUTH-DOMAIN',
-    storageBucket: 'YOUR-ACTUAL-STORAGE-BUCKET',
+    apiKey: 'AIzaSyBV5ynEzbvYowI_dhU9ogyprL4oD-5ywWI',
+    appId: '1:265788001372:web:c64d2d972d195ac125aa99',
+    messagingSenderId: '265788001372',
+    projectId: 'jagrata-420',
+    authDomain: 'jagrata-420.firebaseapp.com',
+    storageBucket: 'jagrata-420.firebasestorage.app',
+    measurementId: 'G-Z6Y1ESFFLR',
   );
 } 

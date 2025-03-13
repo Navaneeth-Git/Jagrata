@@ -1,11 +1,11 @@
 {
-    "name": "jagrata",
-    "short_name": "jagrata",
+    "name": "Jagrata",
+    "short_name": "Jagrata",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A platform",
+    "description": "Jagrata Incident Reporting System",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
@@ -30,6 +30,11 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        },
+        {
+            "src": "favicon.png",
+            "sizes": "64x64",
+            "type": "image/png"
         }
     ]
 }

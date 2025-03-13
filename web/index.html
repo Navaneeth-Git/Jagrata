@@ -32,35 +32,81 @@
   <title>Jagrata</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+    import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js';
+    import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+    import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+    import { getStorage } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js';
 
-  <script>
-    // Your web app's Firebase configuration
     const firebaseConfig = {
-      apiKey: "YOUR-ACTUAL-API-KEY",
-      authDomain: "YOUR-ACTUAL-AUTH-DOMAIN",
-      projectId: "YOUR-ACTUAL-PROJECT-ID",
-      storageBucket: "YOUR-ACTUAL-STORAGE-BUCKET",
-      messagingSenderId: "YOUR-ACTUAL-SENDER-ID",
-      appId: "YOUR-ACTUAL-APP-ID"
+      apiKey: "AIzaSyBV5ynEzbvYowI_dhU9ogyprL4oD-5ywWI",
+      authDomain: "jagrata-420.firebaseapp.com",
+      projectId: "jagrata-420",
+      storageBucket: "jagrata-420.firebasestorage.app",
+      messagingSenderId: "265788001372",
+      appId: "1:265788001372:web:c64d2d972d195ac125aa99",
+      measurementId: "G-Z6Y1ESFFLR"
     };
 
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const firestore = getFirestore(app);
+    const storage = getStorage(app);
+
+    window.firebase = {
+      app,
+      analytics,
+      auth,
+      firestore,
+      storage
+    };
   </script>
+
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    var serviceWorkerVersion = null;
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
 </head>
 <body>
-  <script>
-    let serviceWorkerVersion = null;
-  </script>
-  <script src="main.dart.js" type="application/javascript"></script>
+  <!-- Loading indicator -->
+  <div id="loading">
+    <style>
+      body {
+        inset: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        position: fixed;
+      }
+      #loading {
+        align-items: center;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        width: 100%;
+      }
+      #loading img {
+        animation: 1s ease-in-out 0s infinite bounce;
+        height: 100px;
+        width: 100px;
+      }
+      @keyframes bounce {
+        0%, 100% { transform: scale(1.0); }
+        50% { transform: scale(1.1); }
+      }
+    </style>
+    <img src="icons/Icon-192.png" alt="Loading indicator..." />
+  </div>
+
   <script>
     window.addEventListener('load', function(ev) {
+      var loading = document.querySelector('#loading');
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
@@ -69,6 +115,7 @@
         onEntrypointLoaded: function(engineInitializer) {
           engineInitializer.initializeEngine().then(function(appRunner) {
             appRunner.runApp();
+            loading.remove();
           });
         }
       });
