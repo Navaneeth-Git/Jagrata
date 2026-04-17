@@ -144,7 +144,7 @@ class _AddIncidentPageState extends State<AddIncidentPage> {
     _checkLatestProfileStatus();
     
     // Initialize Firebase VertexAI model
-    _model = FirebaseVertexAI.instance.generativeModel(model: 'gemini-2.5-flash');
+    _model = FirebaseVertexAI.instance.generativeModel(model: 'gemini-3-flash');
   }
 
   // Add this method to check the latest profile status
